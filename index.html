@@ -481,7 +481,10 @@
     `;
 
     const frase = FRASES[Math.floor(Math.random() * FRASES.length)];
-    document.getElementById('cardFooter').innerHTML = `<p>${frase}</p>`;
+document.getElementById('cardFooter').innerHTML = `
+  <p>${frase}</p>
+  <p style="font-size:11px; color:#4a7aaa; margin-top:8px; font-style:italic; font-weight:400; letter-spacing:0.5px;">Desarrollado por Federico Olego</p>
+`;
 
     document.getElementById('formCard').style.display = 'none';
     const wrap = document.getElementById('cardWrap');
