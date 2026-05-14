@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎾 Turno de Pádel — Vélez</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #060d1a;
+      font-family: 'Barlow', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 16px 48px;
+    }
+
+    .container { width: 100%; max-width: 440px; }
+
+    .form-card {
+      background: #0a0f1e;
+      border: 1px solid #1a2e4a;
+      border-radius: 20px;
+      padding: 28px 24px;
+      margin-bottom: 24px;
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .form-header .ball { font-size: 40px; display: block; margin-bottom: 8px; }
+
+    .form-header h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: #f0c040;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .form-header p {
+      color: #4a7aaa;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    .field { margin-bottom: 16px; }
+
+    .field label {
+      display: block;
+      color: #7ab3e0;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 7px;
+    }
+
+    .field label .opt {
+      color: #3d6080;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 11px;
+    }
+
+    input[type="date"],
+    input[type="time"],
+    input[type="text"],
+    select {
+      width: 100%;
+      background: #0d1f3c;
+      border: 1px solid #1e3a5f;
+      color: #e8f4ff;
+      font-family: 'Barlow', sans-serif;
+      font-size: 14px;
+      padding: 11px 14px;
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input[type="date"]:focus,
+    input[type="time"]:focus,
+    input[type="text"]:focus,
+    select:focus { border-color: #4fc3f7; }
+
+    select:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    select option { background: #0d1f3c; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #1a2e4a;
+      margin: 20px 0;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: #001f5b;
+      border: 2px solid #4fc3f7;
+      color: #ffffff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 4px;
+    }
+
+    .btn:hover { background: #0a3060; }
+    .btn:active { transform: scale(0.98); }
+
+    .hint {
+      text-align: center;
+      color: #3d6080;
+      font-size: 11px;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    .credit {
+      text-align: center;
+      color: #2a4a6a;
+      font-size: 11px;
+      margin-top: 16px;
+      letter-spacing: 0.5px;
+      font-style: italic;
+    }
+
+    /* TARJETA */
+    .card-wrap { display: none; }
+
+    .card {
+      background: #001f5b;
+      border-radius: 24px;
+      border: 2px solid #1e3a5f;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: #000d2e;
+      padding: 24px 24px 20px;
+      border-bottom: 3px solid #f0c040;
+      text-align: center;
+    }
+
+    .card-header-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .card-header .emoji { font-size: 40px; line-height: 1; }
+
+    .card-header h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin: 0;
+    }
+
+    .card-header .confirmed {
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      margin-top: 10px;
+    }
+
+    .card-body { padding: 6px 0; }
+
+    .card-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 24px;
+      border-bottom: 1px solid #0d2a4a;
+    }
+
+    .card-row:last-child { border-bottom: none; }
+
+    .card-row .icon { font-size: 22px; min-width: 30px; text-align: center; }
+
+    .card-row .key {
+      color: #4a7aaa;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .card-row .val {
+      color: #ffffff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      line-height: 1;
+    }
+
+    .card-players {
+      background: #00174a;
+      padding: 16px 24px;
+      border-top: 2px solid #0d2a4a;
+    }
+
+    .card-players .players-label {
+      color: #4a7aaa;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .player-list { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .player-chip {
+      background: #0a3060;
+      border: 1px solid #1e3a5f;
+      color: #e8f4ff;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    .card-footer {
+      background: #000a22;
+      padding: 15px 24px;
+      text-align: center;
+      border-top: 1px solid #0d2a4a;
+    }
+
+    .card-footer p {
+      color: #e8f4ff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      font-style: italic;
+    }
+
+    .screenshot-hint {
+      text-align: center;
+      color: #3d6080;
+      font-size: 11px;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    .share-btns {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .share-btn {
+      flex: 1;
+      padding: 11px 10px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .share-btn:active { transform: scale(0.97); }
+
+    .btn-copy {
+      background: #0d2a4a;
+      border: 1px solid #1e3a5f;
+      color: #7ab3e0;
+    }
+
+    .btn-copy:hover { background: #0f3460; }
+
+    .btn-wa {
+      background: #1da851;
+      color: #ffffff;
+    }
+
+    .btn-wa:hover { opacity: 0.88; }
+
+    .toast {
+      display: none;
+      text-align: center;
+      color: #4caf8c;
+      font-size: 12px;
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
+    .reset-btn {
+      width: 100%;
+      margin-top: 12px;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid #1e3a5f;
+      color: #4a7aaa;
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .reset-btn:hover { border-color: #4fc3f7; color: #7ab3e0; }
+
+    @media (max-width: 480px) {
+      body { padding: 16px 12px 40px; }
+      .form-card { padding: 22px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="form-card" id="formCard">
+    <div class="form-header">
+      <h1>🎾 Turno de Pádel</h1>
+      <p>Completá los datos y generá tu tarjeta</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>📅 Fecha</label>
+        <input type="date" id="fecha">
+      </div>
+      <div class="field">
+        <label>⏰ Hora</label>
+        <input type="time" id="hora">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>📍 Lugar</label>
+      <input type="text" id="lugar" placeholder="Ej: NODO, El Clásico, Defensores...">
+    </div>
+
+    <div class="field">
+      <label>🏟️ Cancha <span class="opt">(opcional)</span></label>
+      <input type="text" id="cancha" placeholder="Ej: C1, C2, Blindex...">
+    </div>
+
+    <div class="field">
+      <label>👥 Jugadores</label>
+      <div class="grid-2" style="gap: 10px;">
+        <input type="text" id="jugador1" placeholder="Jugador 1">
+        <input type="text" id="jugador2" placeholder="Jugador 2">
+        <input type="text" id="jugador3" placeholder="Jugador 3">
+        <input type="text" id="jugador4" placeholder="Jugador 4">
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <button class="btn" onclick="generarTarjeta()">🎾 Generar tarjeta</button>
+    <p class="hint">Completá los datos y hacé screenshot para compartir por WhatsApp 📲</p>
+    <p class="credit">Desarrollado por Federico Olego</p>
+  </div>
+
+  <div class="card-wrap" id="cardWrap">
+    <div class="card" id="card">
+      <div class="card-header">
+        <div class="card-header-title">
+          <span class="emoji">🎾</span>
+          <h2>Turno de Pádel</h2>
+        </div>
+        <!-- <p class="confirmed">Nos vemos en la cancha</p> -->
+      </div>
+      <div class="card-body" id="cardBody"></div>
+      <div class="card-players" id="cardPlayers"></div>
+      <div class="card-footer" id="cardFooter"></div>
+    </div>
+    <p class="screenshot-hint">☝️ Compartí la tarjeta por WhatsApp o copiá la imagen</p>
+    <div class="share-btns">
+      <button class="share-btn btn-copy" onclick="copiarImagen()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copiar imagen
+      </button>
+      <button class="share-btn btn-wa" onclick="compartirWhatsApp()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+        WhatsApp
+      </button>
+    </div>
+    <div class="toast" id="toast">✅ ¡Imagen copiada! Pegala en WhatsApp</div>
+    <button class="reset-btn" onclick="resetForm()">← Modificar datos</button>
+  </div>
+
+</div>
+
+<script>
+  const FRASES = [
+    '¡Nos vemos en la cancha! 💪',
+    '¡Hoy ganamos todos! 🏆',
+    '¡A romperla en cancha! 🔥',
+    '¡Dale que los pisamos! 🎾'
+  ];
+
+
+
+  function formatFecha(val) {
+    if (!val) return '';
+    const [y, m, d] = val.split('-');
+    const DIAS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+    const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    const date = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+    return `${DIAS[date.getDay()]} ${parseInt(d)} de ${MESES[parseInt(m) - 1]}`;
+  }
+
+  function generarTarjeta() {
+    const fecha  = document.getElementById('fecha').value;
+    const hora   = document.getElementById('hora').value;
+    const lugar  = document.getElementById('lugar').value.trim();
+    const cancha = document.getElementById('cancha').value.trim();
+
+    const players = [1,2,3,4]
+      .map(i => document.getElementById('jugador' + i).value.trim())
+      .filter(Boolean);
+
+    if (!fecha || !hora || !lugar || players.length === 0) {
+      alert('⚠️ Completá fecha, hora, lugar y al menos un jugador para continuar.');
+      return;
+    }
+
+    const rows = [
+      { icon: '📅', key: 'Fecha',  val: formatFecha(fecha) },
+      { icon: '⏰', key: 'Hora',   val: hora + 'hs' },
+      { icon: '📍', key: 'Lugar',  val: lugar },
+    ];
+    if (cancha) rows.push({ icon: '🏟️', key: 'Cancha', val: cancha });
+
+    document.getElementById('cardBody').innerHTML = rows.map(r => `
+      <div class="card-row">
+        <span class="icon">${r.icon}</span>
+        <div>
+          <div class="key">${r.key}</div>
+          <div class="val">${r.val}</div>
+        </div>
+      </div>
+    `).join('');
+
+    
+    document.getElementById('cardPlayers').innerHTML = `
+      <div class="players-label">👥 Jugadores</div>
+      <div class="player-list">${players.map(p => `<span class="player-chip">${p}</span>`).join('')}</div>
+    `;
+
+    const frase = FRASES[Math.floor(Math.random() * FRASES.length)];
+    document.getElementById('cardFooter').innerHTML = `<p>${frase}</p>`;
+
+    document.getElementById('formCard').style.display = 'none';
+    const wrap = document.getElementById('cardWrap');
+    wrap.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function resetForm() {
+    document.getElementById('cardWrap').style.display = 'none';
+    document.getElementById('formCard').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function capturarCanvas() {
+    const card = document.getElementById('card');
+    return await html2canvas(card, { backgroundColor: null, scale: 2, useCORS: true });
+  }
+
+  async function copiarImagen() {
+    try {
+      const canvas = await capturarCanvas();
+      canvas.toBlob(async blob => {
+        try {
+          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+          const toast = document.getElementById('toast');
+          toast.style.display = 'block';
+          setTimeout(() => toast.style.display = 'none', 3000);
+        } catch {
+          const url = canvas.toDataURL();
+          const a = document.createElement('a');
+          a.href = url; a.download = 'turno-padel.png'; a.click();
+        }
+      });
+    } catch(e) {
+      alert('No se pudo copiar. Hacé screenshot manualmente.');
+    }
+  }
+
+  async function compartirWhatsApp() {
+    try {
+      const canvas = await capturarCanvas();
+      canvas.toBlob(async blob => {
+        const file = new File([blob], 'turno-padel.png', { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: 'Turno de Pádel' });
+        } else {
+          const url = canvas.toDataURL();
+          const a = document.createElement('a');
+          a.href = url; a.download = 'turno-padel.png'; a.click();
+        }
+      });
+    } catch(e) {
+      alert('No se pudo compartir. Descargá la imagen y mandala por WhatsApp.');
+    }
+  }
+
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('fecha').value = today;
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+</body>
+</html>
