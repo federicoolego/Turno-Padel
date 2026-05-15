@@ -72,6 +72,16 @@
       font-size: 11px;
     }
 
+    /* Asterisco rojo para campos obligatorios */
+    .field label .req {
+      color: #ff4444;
+      font-weight: 700;
+      font-size: 13px;
+      margin-left: 3px;
+      vertical-align: middle;
+      line-height: 1;
+    }
+
     input[type="date"],
     input[type="time"],
     input[type="text"],
@@ -224,6 +234,23 @@
       line-height: 1;
     }
 
+    /* Badge HOY */
+    .badge-hoy {
+      display: inline-block;
+      background: #f0c040;
+      color: #000d2e;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-left: 8px;
+      vertical-align: middle;
+      position: relative;
+      top: -1px;
+    }
+
     .card-players {
       background: #00174a;
       padding: 16px 24px;
@@ -247,6 +274,17 @@
       color: #e8f4ff;
       font-size: 14px;
       font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    /* Chip para guión cuando no hay jugadores */
+    .player-chip-empty {
+      background: #0a3060;
+      border: 1px solid #1e3a5f;
+      color: #4a7aaa;
+      font-size: 18px;
+      font-weight: 700;
       padding: 6px 14px;
       border-radius: 20px;
     }
@@ -357,27 +395,27 @@
 
     <div class="grid-2">
       <div class="field">
-        <label>📅 Fecha</label>
+        <label>📅 Fecha <span class="req">*</span></label>
         <input type="date" id="fecha">
       </div>
       <div class="field">
-        <label>⏰ Hora</label>
+        <label>⏰ Hora <span class="req">*</span></label>
         <input type="time" id="hora">
       </div>
     </div>
 
     <div class="field">
-      <label>📍 Lugar</label>
-      <input type="text" id="lugar" placeholder="Ej: NODO, El Clásico, Defensores...">
+      <label>📍 Lugar <span class="req">*</span></label>
+      <input type="text" id="lugar" placeholder="Lugar">
     </div>
 
     <div class="field">
       <label>🏟️ Cancha <span class="opt">(opcional)</span></label>
-      <input type="text" id="cancha" placeholder="Ej: C1, C2, Blindex...">
+      <input type="text" id="cancha" placeholder="Cancha">
     </div>
 
     <div class="field">
-      <label>👥 Jugadores</label>
+      <label>👥 Jugadores <span class="opt">(opcional)</span></label>
       <div class="grid-2" style="gap: 10px;">
         <input type="text" id="jugador1" placeholder="Jugador 1">
         <input type="text" id="jugador2" placeholder="Jugador 2">
@@ -397,12 +435,9 @@
     <div class="card" id="card">
       <div class="card-header">
         <div class="card-header-title">
-          <!-- <span class="emoji">🎾</span> -->
           <h2>Turno de Padel</h2>
-          <!-- <span class="emoji">🎾</span> -->
         </div>
         <p class="confirmed">✅ Confirmado ✅</p>
-        <!-- <p class="confirmed">Nos vemos en la cancha</p> -->
       </div>
       <div class="card-body" id="cardBody"></div>
       <div class="card-players" id="cardPlayers"></div>
@@ -433,7 +468,23 @@
     '¡Dale que los pisamos! 🎾'
   ];
 
+  function getTodayString() {
+    // Fecha de hoy en formato YYYY-MM-DD según el timezone local
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
 
+  function getTomorrowString() {
+    const now = new Date();
+    now.setDate(now.getDate() + 1);
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
 
   function formatFecha(val) {
     if (!val) return '';
@@ -454,17 +505,26 @@
       .map(i => document.getElementById('jugador' + i).value.trim())
       .filter(Boolean);
 
-    if (!fecha || !hora || !lugar || players.length === 0) {
-      alert('⚠️ Completá fecha, hora, lugar y al menos un jugador para continuar.');
+    // Solo fecha, hora y lugar son obligatorios; jugadores ahora es opcional
+    if (!fecha || !hora || !lugar) {
+      alert('⚠️ Completá fecha, hora y lugar para continuar.');
       return;
     }
 
+    // Detectar si la fecha seleccionada es hoy o mañana
+    const esHoy = fecha === getTodayString();
+    const esManiana = fecha === getTomorrowString();
+    const fechaFormateada = formatFecha(fecha);
+    let fechaVal = fechaFormateada;
+    if (esHoy)     fechaVal += ` <span class="badge-hoy">HOY</span>`;
+    if (esManiana) fechaVal += ` <span class="badge-hoy">MAÑANA</span>`;
+
     const rows = [
-      { icon: '📅', key: 'Fecha',  val: formatFecha(fecha) },
+      { icon: '📅', key: 'Fecha',  val: fechaVal },
       { icon: '⏰', key: 'Hora',   val: hora + 'hs' },
-      { icon: '📍', key: 'Lugar',  val: lugar },
+      { icon: '📍', key: 'Lugar',  val: lugar || '-' },
+      { icon: '🏟️', key: 'Cancha', val: cancha || '-' },
     ];
-    if (cancha) rows.push({ icon: '🏟️', key: 'Cancha', val: cancha });
 
     document.getElementById('cardBody').innerHTML = rows.map(r => `
       <div class="card-row">
@@ -476,17 +536,24 @@
       </div>
     `).join('');
 
-    
-    document.getElementById('cardPlayers').innerHTML = `
-      <div class="players-label">👥 Jugadores</div>
-      <div class="player-list">${players.map(p => `<span class="player-chip">${p}</span>`).join('')}</div>
-    `;
+    // Mostrar jugadores cargados; si no hay ninguno, ocultar la sección
+    if (players.length > 0) {
+      const playersHTML = players.map(p => `<span class="player-chip">${p}</span>`).join('');
+      document.getElementById('cardPlayers').innerHTML = `
+        <div class="players-label">👥 Jugadores</div>
+        <div class="player-list">${playersHTML}</div>
+      `;
+      document.getElementById('cardPlayers').style.display = '';
+    } else {
+      document.getElementById('cardPlayers').innerHTML = '';
+      document.getElementById('cardPlayers').style.display = 'none';
+    }
 
     const frase = FRASES[Math.floor(Math.random() * FRASES.length)];
-document.getElementById('cardFooter').innerHTML = `
-  <p>${frase}</p>
-  <p style="font-size:11px; color:#4a7aaa; margin-top:8px; font-style:italic; font-weight:400; letter-spacing:0.5px;">Desarrollado por Federico Olego</p>
-`;
+    document.getElementById('cardFooter').innerHTML = `
+      <p>${frase}</p>
+      <p style="font-size:11px; color:#4a7aaa; margin-top:8px; font-style:italic; font-weight:400; letter-spacing:0.5px;">Desarrollado por Federico Olego</p>
+    `;
 
     document.getElementById('formCard').style.display = 'none';
     const wrap = document.getElementById('cardWrap');
@@ -543,8 +610,10 @@ document.getElementById('cardFooter').innerHTML = `
     }
   }
 
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('fecha').value = today;
+  const today = getTodayString();
+  const fechaInput = document.getElementById('fecha');
+  fechaInput.value = today;
+  fechaInput.min = today;
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
