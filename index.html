@@ -9,44 +9,172 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ===== TEMA OSCURO (default) ===== */
+    :root {
+      --bg: #060d1a;
+      --form-bg: #0a0f1e;
+      --form-border: #1a2e4a;
+      --header-title: #f0c040;
+      --header-sub: #4a7aaa;
+      --label: #7ab3e0;
+      --label-opt: #3d6080;
+      --input-bg: #0d1f3c;
+      --input-border: #1e3a5f;
+      --input-text: #e8f4ff;
+      --input-focus: #4fc3f7;
+      --divider: #1a2e4a;
+      --btn-bg: #001f5b;
+      --btn-border: #4fc3f7;
+      --btn-text: #ffffff;
+      --btn-hover: #0a3060;
+      --hint: #3d6080;
+      --credit: #2a4a6a;
+      --card-bg: #001f5b;
+      --card-border: #1e3a5f;
+      --card-header-bg: #000d2e;
+      --card-header-accent: #f0c040;
+      --card-header-title: #ffffff;
+      --card-confirmed: #ffffff;
+      --card-row-border: #0d2a4a;
+      --card-key: #4a7aaa;
+      --card-val: #ffffff;
+      --badge-bg: #f0c040;
+      --badge-text: #000d2e;
+      --players-bg: #00174a;
+      --players-border: #0d2a4a;
+      --players-label: #4a7aaa;
+      --chip-bg: #0a3060;
+      --chip-border: #1e3a5f;
+      --chip-text: #e8f4ff;
+      --chip-empty-text: #4a7aaa;
+      --footer-bg: #000a22;
+      --footer-text: #e8f4ff;
+      --footer-credit: #4a7aaa;
+      --screenshot-hint: #3d6080;
+      --copy-bg: #0d2a4a;
+      --copy-border: #1e3a5f;
+      --copy-text: #7ab3e0;
+      --copy-hover: #0f3460;
+      --toast: #4caf8c;
+      --reset-border: #1e3a5f;
+      --reset-text: #4a7aaa;
+      --theme-btn-bg: #0d1f3c;
+      --theme-btn-border: #1e3a5f;
+    }
+
+    /* ===== TEMA CLARO ===== */
+    [data-theme="light"] {
+      --bg: #eef3f9;
+      --form-bg: #ffffff;
+      --form-border: #d4e0ee;
+      --header-title: #c8951a;
+      --header-sub: #5f86ad;
+      --label: #2e6da4;
+      --label-opt: #93a8bd;
+      --input-bg: #f4f8fc;
+      --input-border: #c9d8e8;
+      --input-text: #1a2e44;
+      --input-focus: #2e86c1;
+      --divider: #e1e9f2;
+      --btn-bg: #1565c0;
+      --btn-border: #1565c0;
+      --btn-text: #ffffff;
+      --btn-hover: #0d4d96;
+      --hint: #93a8bd;
+      --credit: #aab9c9;
+      --card-bg: #ffffff;
+      --card-border: #d4e0ee;
+      --card-header-bg: #1565c0;
+      --card-header-accent: #f0c040;
+      --card-header-title: #ffffff;
+      --card-confirmed: #ffffff;
+      --card-row-border: #e1e9f2;
+      --card-key: #5f86ad;
+      --card-val: #14304a;
+      --badge-bg: #f0c040;
+      --badge-text: #0d3f78;
+      --players-bg: #f4f8fc;
+      --players-border: #e1e9f2;
+      --players-label: #5f86ad;
+      --chip-bg: #e6eef7;
+      --chip-border: #c9d8e8;
+      --chip-text: #14304a;
+      --chip-empty-text: #5f86ad;
+      --footer-bg: #f4f8fc;
+      --footer-text: #1565c0;
+      --footer-credit: #5f86ad;
+      --screenshot-hint: #93a8bd;
+      --copy-bg: #f4f8fc;
+      --copy-border: #c9d8e8;
+      --copy-text: #2e6da4;
+      --copy-hover: #e6eef7;
+      --toast: #2e9c78;
+      --reset-border: #c9d8e8;
+      --reset-text: #5f86ad;
+      --theme-btn-bg: #ffffff;
+      --theme-btn-border: #c9d8e8;
+    }
+
     body {
-      background: #060d1a;
+      background: var(--bg);
       font-family: 'Barlow', sans-serif;
       min-height: 100vh;
       display: flex;
       align-items: flex-start;
       justify-content: center;
       padding: 32px 16px 48px;
+      transition: background 0.3s;
     }
 
-    .container { width: 100%; max-width: 440px; }
+    .container { width: 100%; max-width: 440px; position: relative; }
+
+    /* Botón de cambio de tema */
+    .theme-toggle {
+      position: absolute;
+      top: -8px;
+      right: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--theme-btn-bg);
+      border: 1px solid var(--theme-btn-border);
+      color: var(--header-title);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, border-color 0.2s, background 0.3s;
+      z-index: 10;
+      line-height: 1;
+    }
+
+    .theme-toggle:hover { border-color: var(--input-focus); transform: scale(1.08); }
+    .theme-toggle:active { transform: scale(0.95); }
 
     .form-card {
-      background: #0a0f1e;
-      border: 1px solid #1a2e4a;
+      background: var(--form-bg);
+      border: 1px solid var(--form-border);
       border-radius: 20px;
       padding: 28px 24px;
       margin-bottom: 24px;
+      transition: background 0.3s, border-color 0.3s;
     }
 
-    .form-header {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
+    .form-header { text-align: center; margin-bottom: 24px; }
     .form-header .ball { font-size: 40px; display: block; margin-bottom: 8px; }
 
     .form-header h1 {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 22px;
       font-weight: 800;
-      color: #f0c040;
+      color: var(--header-title);
       text-transform: uppercase;
       letter-spacing: 2px;
     }
 
     .form-header p {
-      color: #4a7aaa;
+      color: var(--header-sub);
       font-size: 12px;
       letter-spacing: 0.5px;
       margin-top: 4px;
@@ -56,7 +184,7 @@
 
     .field label {
       display: block;
-      color: #7ab3e0;
+      color: var(--label);
       font-size: 11px;
       font-weight: 600;
       text-transform: uppercase;
@@ -65,14 +193,13 @@
     }
 
     .field label .opt {
-      color: #3d6080;
+      color: var(--label-opt);
       font-weight: 400;
       text-transform: none;
       letter-spacing: 0;
       font-size: 11px;
     }
 
-    /* Asterisco rojo para campos obligatorios */
     .field label .req {
       color: #ff4444;
       font-weight: 700;
@@ -87,15 +214,15 @@
     input[type="text"],
     select {
       width: 100%;
-      background: #0d1f3c;
-      border: 1px solid #1e3a5f;
-      color: #e8f4ff;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: var(--input-text);
       font-family: 'Barlow', sans-serif;
       font-size: 14px;
       padding: 11px 14px;
       border-radius: 10px;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, background 0.3s, color 0.3s;
       -webkit-appearance: none;
       appearance: none;
     }
@@ -103,29 +230,25 @@
     input[type="date"]:focus,
     input[type="time"]:focus,
     input[type="text"]:focus,
-    select:focus { border-color: #4fc3f7; }
+    select:focus { border-color: var(--input-focus); }
 
-    select:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-
-    select option { background: #0d1f3c; }
+    select:disabled { opacity: 0.45; cursor: not-allowed; }
+    select option { background: var(--input-bg); }
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
     .divider {
       border: none;
-      border-top: 1px solid #1a2e4a;
+      border-top: 1px solid var(--divider);
       margin: 20px 0;
     }
 
     .btn {
       width: 100%;
       padding: 14px;
-      background: #001f5b;
-      border: 2px solid #4fc3f7;
-      color: #ffffff;
+      background: var(--btn-bg);
+      border: 2px solid var(--btn-border);
+      color: var(--btn-text);
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 18px;
       font-weight: 700;
@@ -137,12 +260,12 @@
       margin-top: 4px;
     }
 
-    .btn:hover { background: #0a3060; }
+    .btn:hover { background: var(--btn-hover); }
     .btn:active { transform: scale(0.98); }
 
     .hint {
       text-align: center;
-      color: #3d6080;
+      color: var(--hint);
       font-size: 11px;
       margin-top: 10px;
       line-height: 1.5;
@@ -150,7 +273,7 @@
 
     .credit {
       text-align: center;
-      color: #2a4a6a;
+      color: var(--credit);
       font-size: 11px;
       margin-top: 16px;
       letter-spacing: 0.5px;
@@ -161,16 +284,17 @@
     .card-wrap { display: none; }
 
     .card {
-      background: #001f5b;
+      background: var(--card-bg);
       border-radius: 24px;
-      border: 2px solid #1e3a5f;
+      border: 2px solid var(--card-border);
       overflow: hidden;
+      transition: background 0.3s, border-color 0.3s;
     }
 
     .card-header {
-      background: #000d2e;
+      background: var(--card-header-bg);
       padding: 24px 24px 20px;
-      border-bottom: 3px solid #f0c040;
+      border-bottom: 3px solid var(--card-header-accent);
       text-align: center;
     }
 
@@ -187,14 +311,14 @@
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 28px;
       font-weight: 800;
-      color: #ffffff;
+      color: var(--card-header-title);
       text-transform: uppercase;
       letter-spacing: 3px;
       margin: 0;
     }
 
     .card-header .confirmed {
-      color: #ffffff;
+      color: var(--card-confirmed);
       font-size: 13px;
       font-weight: 500;
       letter-spacing: 0.5px;
@@ -208,7 +332,7 @@
       align-items: center;
       gap: 14px;
       padding: 13px 24px;
-      border-bottom: 1px solid #0d2a4a;
+      border-bottom: 1px solid var(--card-row-border);
     }
 
     .card-row:last-child { border-bottom: none; }
@@ -216,7 +340,7 @@
     .card-row .icon { font-size: 22px; min-width: 30px; text-align: center; }
 
     .card-row .key {
-      color: #4a7aaa;
+      color: var(--card-key);
       font-size: 11px;
       font-weight: 600;
       text-transform: uppercase;
@@ -226,7 +350,7 @@
     }
 
     .card-row .val {
-      color: #ffffff;
+      color: var(--card-val);
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 18px;
       font-weight: 700;
@@ -234,11 +358,10 @@
       line-height: 1;
     }
 
-    /* Badge HOY */
     .badge-hoy {
       display: inline-block;
-      background: #f0c040;
-      color: #000d2e;
+      background: var(--badge-bg);
+      color: var(--badge-text);
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 12px;
       font-weight: 800;
@@ -252,13 +375,13 @@
     }
 
     .card-players {
-      background: #00174a;
+      background: var(--players-bg);
       padding: 16px 24px;
-      border-top: 2px solid #0d2a4a;
+      border-top: 2px solid var(--players-border);
     }
 
     .card-players .players-label {
-      color: #4a7aaa;
+      color: var(--players-label);
       font-size: 11px;
       font-weight: 600;
       text-transform: uppercase;
@@ -269,20 +392,19 @@
     .player-list { display: flex; flex-wrap: wrap; gap: 8px; }
 
     .player-chip {
-      background: #0a3060;
-      border: 1px solid #1e3a5f;
-      color: #e8f4ff;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      color: var(--chip-text);
       font-size: 14px;
       font-weight: 500;
       padding: 6px 14px;
       border-radius: 20px;
     }
 
-    /* Chip para guión cuando no hay jugadores */
     .player-chip-empty {
-      background: #0a3060;
-      border: 1px solid #1e3a5f;
-      color: #4a7aaa;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      color: var(--chip-empty-text);
       font-size: 18px;
       font-weight: 700;
       padding: 6px 14px;
@@ -290,14 +412,14 @@
     }
 
     .card-footer {
-      background: #000a22;
+      background: var(--footer-bg);
       padding: 15px 24px;
       text-align: center;
-      border-top: 1px solid #0d2a4a;
+      border-top: 1px solid var(--card-row-border);
     }
 
     .card-footer p {
-      color: #e8f4ff;
+      color: var(--footer-text);
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 18px;
       font-weight: 700;
@@ -307,17 +429,13 @@
 
     .screenshot-hint {
       text-align: center;
-      color: #3d6080;
+      color: var(--screenshot-hint);
       font-size: 11px;
       margin-top: 14px;
       line-height: 1.6;
     }
 
-    .share-btns {
-      display: flex;
-      gap: 10px;
-      margin-top: 14px;
-    }
+    .share-btns { display: flex; gap: 10px; margin-top: 14px; }
 
     .share-btn {
       flex: 1;
@@ -338,24 +456,20 @@
     .share-btn:active { transform: scale(0.97); }
 
     .btn-copy {
-      background: #0d2a4a;
-      border: 1px solid #1e3a5f;
-      color: #7ab3e0;
+      background: var(--copy-bg);
+      border: 1px solid var(--copy-border);
+      color: var(--copy-text);
     }
 
-    .btn-copy:hover { background: #0f3460; }
+    .btn-copy:hover { background: var(--copy-hover); }
 
-    .btn-wa {
-      background: #1da851;
-      color: #ffffff;
-    }
-
+    .btn-wa { background: #1da851; color: #ffffff; }
     .btn-wa:hover { opacity: 0.88; }
 
     .toast {
       display: none;
       text-align: center;
-      color: #4caf8c;
+      color: var(--toast);
       font-size: 12px;
       margin-top: 8px;
       font-weight: 500;
@@ -366,8 +480,8 @@
       margin-top: 12px;
       padding: 10px;
       background: transparent;
-      border: 1px solid #1e3a5f;
-      color: #4a7aaa;
+      border: 1px solid var(--reset-border);
+      color: var(--reset-text);
       font-family: 'Barlow', sans-serif;
       font-size: 13px;
       border-radius: 10px;
@@ -375,17 +489,21 @@
       transition: border-color 0.2s, color 0.2s;
     }
 
-    .reset-btn:hover { border-color: #4fc3f7; color: #7ab3e0; }
+    .reset-btn:hover { border-color: var(--input-focus); color: var(--label); }
 
     @media (max-width: 480px) {
       body { padding: 16px 12px 40px; }
       .form-card { padding: 22px 18px; }
+      .theme-toggle { top: -4px; width: 38px; height: 38px; font-size: 18px; }
     }
   </style>
 </head>
 <body>
 
 <div class="container">
+
+  <!-- Botón de cambio de tema -->
+  <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Cambiar tema">🌙</button>
 
   <div class="form-card" id="formCard">
     <div class="form-header">
@@ -461,6 +579,20 @@
 </div>
 
 <script>
+  // ===== Cambio de tema =====
+  function toggleTheme() {
+    const html = document.documentElement;
+    const btn = document.getElementById('themeToggle');
+    const isLight = html.getAttribute('data-theme') === 'light';
+    if (isLight) {
+      html.removeAttribute('data-theme'); // vuelve a oscuro
+      btn.textContent = '🌙';
+    } else {
+      html.setAttribute('data-theme', 'light');
+      btn.textContent = '☀️';
+    }
+  }
+
   const FRASES = [
     '¡Nos vemos en la cancha! 💪',
     /*'¡Hoy ganamos todos! 🏆',
@@ -469,7 +601,6 @@
   ];
 
   function getTodayString() {
-    // Fecha de hoy en formato YYYY-MM-DD según el timezone local
     const now = new Date();
     const y = now.getFullYear();
     const m = String(now.getMonth() + 1).padStart(2, '0');
@@ -505,13 +636,11 @@
       .map(i => document.getElementById('jugador' + i).value.trim())
       .filter(Boolean);
 
-    // Solo fecha, hora y lugar son obligatorios; jugadores ahora es opcional
     if (!fecha || !hora || !lugar) {
       alert('⚠️ Completá fecha, hora y lugar para continuar.');
       return;
     }
 
-    // Detectar si la fecha seleccionada es hoy o mañana
     const esHoy = fecha === getTodayString();
     const esManiana = fecha === getTomorrowString();
     const fechaFormateada = formatFecha(fecha);
@@ -536,7 +665,6 @@
       </div>
     `).join('');
 
-    // Mostrar jugadores cargados; si no hay ninguno, ocultar la sección
     if (players.length > 0) {
       const playersHTML = players.map(p => `<span class="player-chip">${p}</span>`).join('');
       document.getElementById('cardPlayers').innerHTML = `
@@ -552,7 +680,7 @@
     const frase = FRASES[Math.floor(Math.random() * FRASES.length)];
     document.getElementById('cardFooter').innerHTML = `
       <p>${frase}</p>
-      <p style="font-size:11px; color:#4a7aaa; margin-top:8px; font-style:italic; font-weight:400; letter-spacing:0.5px;">Desarrollado por Federico Olego</p>
+      <p style="font-size:11px; color:var(--footer-credit); margin-top:8px; font-style:italic; font-weight:400; letter-spacing:0.5px;">Desarrollado por Federico Olego</p>
     `;
 
     document.getElementById('formCard').style.display = 'none';
@@ -569,7 +697,21 @@
 
   async function capturarCanvas() {
     const card = document.getElementById('card');
-    return await html2canvas(card, { backgroundColor: null, scale: 2, useCORS: true });
+    const tema = document.documentElement.getAttribute('data-theme'); // 'light' o null
+    return await html2canvas(card, {
+      backgroundColor: null,
+      scale: 2,
+      useCORS: true,
+      onclone: (clonedDoc) => {
+        // Asegura que el documento clonado conserve el tema activo,
+        // así las variables CSS resuelven igual que en pantalla.
+        if (tema === 'light') {
+          clonedDoc.documentElement.setAttribute('data-theme', 'light');
+        } else {
+          clonedDoc.documentElement.removeAttribute('data-theme');
+        }
+      }
+    });
   }
 
   async function copiarImagen() {
