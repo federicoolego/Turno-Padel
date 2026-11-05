@@ -1,0 +1,51 @@
+name: Deploy a GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Armar sitio con versión y build
+        run: |
+          # La versión se sube a mano en version.json ("version"); el build (commit) y la fecha los pone el deploy.
+          VERSION=$(jq -r '.version' version.json)
+          BUILD="${GITHUB_SHA::7}"
+          FECHA=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+          mkdir dist
+          rsync -a --exclude='.git' --exclude='.github' --exclude='dist' --exclude='README.md' ./ dist/
+
+          jq -n --arg v "$VERSION" --arg b "$BUILD" --arg f "$FECHA" '{version:$v, build:$b, fecha:$f}' > dist/version.json
+          printf "window.APP_INFO = { version: '%s', build: '%s', fecha: '%s' };\n" "$VERSION" "$BUILD" "$FECHA" > dist/version.js
+
+          # Cambia la URL de los archivos en cada deploy: así nadie queda con app.js/styles.css viejos en caché
+          sed -i "s/__BUILD__/$BUILD/g" dist/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
